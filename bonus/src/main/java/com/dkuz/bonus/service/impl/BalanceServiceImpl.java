@@ -1,7 +1,7 @@
 package com.dkuz.bonus.service.impl;
 
-import com.dkuz.bonus.dto.BalanceResponseDto;
 import com.dkuz.bonus.dto.enums.BalanceOperationType;
+import com.dkuz.bonus.dto.BalanceResponseDto;
 import com.dkuz.bonus.model.Balance;
 import com.dkuz.bonus.model.User;
 import com.dkuz.bonus.repository.BalanceRepository;

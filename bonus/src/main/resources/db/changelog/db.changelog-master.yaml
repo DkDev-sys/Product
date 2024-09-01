@@ -16,6 +16,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    primaryKeyName: pk_user
               - column:
                   name: name
                   type: varchar
@@ -31,6 +32,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    primaryKeyName: pk_balance
               - column:
                   name: user_id
                   type: uuid
@@ -44,22 +46,28 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  value: 'e17850ce-13c5-4b58-a170-ca39c33429ee'
+                  value: e17850ce-13c5-4b58-a170-ca39c33429ee
               - column:
                   name: name
-                  value: 'Ivan'
+                  value: Ivan
               - column:
                   name: surname
-                  value: 'Ivanov'
+                  value: Ivanov
         - insert:
             tableName: balance
             columns:
               - column:
                   name: id
-                  value: '70744e0e-3c67-402d-b5f5-5267211af4f5'
+                  value: 70744e0e-3c67-402d-b5f5-5267211af4f5
               - column:
                   name: user_id
-                  value: 'e17850ce-13c5-4b58-a170-ca39c33429ee'
+                  value: e17850ce-13c5-4b58-a170-ca39c33429ee
               - column:
                   name: count
                   value: 100
+        - addForeignKeyConstraint:
+            baseTableName: balance
+            baseColumnNames: user_id
+            constraintName: fk_user_balance
+            referencedTableName: user
+            referencedColumnNames: id
