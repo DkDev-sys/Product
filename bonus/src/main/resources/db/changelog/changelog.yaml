@@ -1,0 +1,65 @@
+databaseChangeLog:
+  - preConditions:
+    - runningAs:
+        username: sa
+  - changeSet:
+      id: 1
+      author: dkuz
+      labels: init
+      changes:
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar
+              - column:
+                  name: surname
+                  type: varchar
+        - createTable:
+            tableName: balance
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: count
+                  type: integer
+        - insert:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  value: 'e17850ce-13c5-4b58-a170-ca39c33429ee'
+              - column:
+                  name: name
+                  value: 'Ivan'
+              - column:
+                  name: surname
+                  value: 'Ivanov'
+        - insert:
+            tableName: balance
+            columns:
+              - column:
+                  name: id
+                  value: '70744e0e-3c67-402d-b5f5-5267211af4f5'
+              - column:
+                  name: user_id
+                  value: 'e17850ce-13c5-4b58-a170-ca39c33429ee'
+              - column:
+                  name: count
+                  value: 100
