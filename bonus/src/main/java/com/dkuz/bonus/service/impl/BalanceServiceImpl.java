@@ -1,7 +1,7 @@
 package com.dkuz.bonus.service.impl;
 
-import com.dkuz.bonus.dto.enums.BalanceOperationType;
 import com.dkuz.bonus.dto.BalanceResponseDto;
+import com.dkuz.bonus.dto.enums.BalanceOperationType;
 import com.dkuz.bonus.model.Balance;
 import com.dkuz.bonus.model.User;
 import com.dkuz.bonus.repository.BalanceRepository;
@@ -56,7 +56,7 @@ public class BalanceServiceImpl implements BalanceService {
             balance.setCount(count);
             balanceRepository.save(balance);
             return new BalanceResponseDto(null, userId, BalanceOperationType.DEBIT);
-        }).orElse(new BalanceResponseDto(null, userId, BalanceOperationType.NOT_ENOUGH_BONUS));
+        }).orElse(new BalanceResponseDto(null, userId, BalanceOperationType.NOT_FOUND));
     }
 
     private User getUser(UUID userId) {

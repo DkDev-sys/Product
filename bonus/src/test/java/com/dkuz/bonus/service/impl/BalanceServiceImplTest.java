@@ -3,11 +3,11 @@ package com.dkuz.bonus.service.impl;
 import com.dkuz.bonus.dto.BalanceRequestDto;
 import com.dkuz.bonus.dto.BalanceResponseDto;
 import com.dkuz.bonus.dto.UserDto;
+import com.dkuz.bonus.dto.enums.BalanceOperationType;
+import com.dkuz.bonus.model.Balance;
 import com.dkuz.bonus.model.User;
 import com.dkuz.bonus.repository.BalanceRepository;
 import com.dkuz.bonus.repository.UserRepository;
-import com.dkuz.bonus.service.BalanceService;
-import com.dkuz.bonus.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ class BalanceServiceImplTest {
     @BeforeEach
     void init() {
         balanceService = new BalanceServiceImpl(userRepository, balanceRepository);
-        userService = new UserServiceImpl(userRepository);
+        userService = new UserServiceImpl(userRepository, balanceRepository);
         User user = new User();
         user.setId(UUID.randomUUID());
         user.setName("1");
@@ -54,9 +54,14 @@ class BalanceServiceImplTest {
 
         userId = userService.createUser(userDto).getId();
 
-        requestDto = new BalanceRequestDto(userId, 100);
+        requestDto = new BalanceRequestDto(userId, 90);
 
-        balanceService.addCountBonus(userId, 100);
+        Balance balance = new Balance();
+        balance.setId(UUID.randomUUID());
+        balance.setCount(100);
+        balance.setUser(user);
+
+        Mockito.lenient().when(balanceRepository.findByUserId(userId)).thenReturn(Optional.of(balance));
     }
 
     @Test
@@ -65,22 +70,38 @@ class BalanceServiceImplTest {
 
         assertNotNull(balance);
         assertEquals(requestDto.getUserId(), balance.getUserId());
-        assertEquals(requestDto.getCountBonus(), 100);
+        assertEquals(100, balance.getBalance());
+
     }
 
     @Test
     void addCountBonus() {
-        BalanceResponseDto balance = balanceService.addCountBonus(userId, 100);
+        BalanceResponseDto balance = balanceService.addCountBonus(requestDto.getUserId(), requestDto.getCountBonus());
 
         assertNotNull(balance);
         assertEquals(requestDto.getUserId(), balance.getUserId());
+        assertEquals(190, balanceService.getBalance(userId).getBalance());
+
+        assertThrows(RuntimeException.class, () -> balanceService.debitBonus(UUID.randomUUID(), requestDto.getCountBonus()));
     }
 
     @Test
     void debitBonus() {
-        BalanceResponseDto balance = balanceService.getBalance(userId);
+        BalanceResponseDto balance = balanceService.debitBonus(requestDto.getUserId(), requestDto.getCountBonus());
 
         assertNotNull(balance);
         assertEquals(requestDto.getUserId(), balance.getUserId());
+        assertEquals(10, balanceService.getBalance(userId).getBalance());
+
+        assertThrows(RuntimeException.class, () -> balanceService.debitBonus(UUID.randomUUID(), requestDto.getCountBonus()));
+    }
+
+    @Test
+    void debitBonusOver() {
+        BalanceResponseDto balance = balanceService.debitBonus(requestDto.getUserId(), 300);
+
+        assertNotNull(balance);
+        assertEquals(requestDto.getUserId(), balance.getUserId());
+        assertEquals(BalanceOperationType.NOT_ENOUGH_BONUS, balance.getOperationType());
     }
 }

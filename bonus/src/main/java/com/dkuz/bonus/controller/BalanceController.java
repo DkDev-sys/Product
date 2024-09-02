@@ -27,6 +27,8 @@ public class BalanceController {
         return ResponseEntity.status(balance.getOperationType().getCode()).body(balance);
     }
 
+    /*Не совсем понял по заданию, договоривались без авторизации и секьюрности, поэтому формулировка,
+    доступно только ограниченому количеству потребителей сервиса не совсем понятна*/
     @PostMapping("/add_count")
     public ResponseEntity<BalanceResponseDto> addCountBonus(@RequestBody BalanceRequestDto request) {
         BalanceResponseDto balance = balanceService.addCountBonus(request.getUserId(), request.getCountBonus());

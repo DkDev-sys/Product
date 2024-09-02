@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor()
-//TODO можно добавить текст для ошибок вторым аргуметом
+/*можно добавить текст для ошибок вторым аргуметом*/
 public enum BalanceOperationType {
     GET(200),
     ADD(200),
